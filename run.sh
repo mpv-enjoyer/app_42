@@ -1,0 +1,1 @@
+docker run -it app_42:v1

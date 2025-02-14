@@ -1,0 +1,1 @@
+docker build -t app_42:v1 .
