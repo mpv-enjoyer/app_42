@@ -1,3 +1,6 @@
 #pragma once
 
-int server_example(int argc, char *argv[]);
+namespace app42
+{
+    int echoServer(int argc, char *argv[]);
+}
