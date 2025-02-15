@@ -34,8 +34,37 @@ public:
     }
 };
 
-/* 2 + 2 * 2 => + 2 * 2 2 */
+class Subtract : public Operation
+{
+public:
+    Subtract() { };
+    double get(double right_value) const override
+    {
+        return m_left_value.value() - right_value;
+    }
+};
 
+class Product : public Operation
+{
+public:
+    Product() { };
+    double get(double right_value) const override
+    {
+        return m_left_value.value() * right_value;
+    }
+};
+
+class Divide : public Operation
+{
+public:
+    Divide() { };
+    double get(double right_value) const override
+    {
+        return m_left_value.value() / right_value;
+    }
+};
+
+// Polish notation
 class Calculator
 {
     std::stack<std::unique_ptr<Operation>> m_operations;
@@ -83,6 +112,9 @@ public:
             else
             {
                 if (word == std::string("+")) m_operations.push(std::make_unique<Add>());
+                if (word == std::string("-")) m_operations.push(std::make_unique<Subtract>());
+                if (word == std::string("*")) m_operations.push(std::make_unique<Product>());
+                if (word == std::string("/")) m_operations.push(std::make_unique<Divide>());
             }
         }
     }
@@ -97,5 +129,7 @@ int main(int argc, char *argv[])
     std::cout << Calculator("+ 2 + 2 4").value() << "\n";
     std::cout << Calculator("1").value() << "\n";
     std::cout << Calculator("+ 42 + 42 0").value() << "\n";
+    std::cout << Calculator("+ 2 * 2 2").value() << "\n";
+    std::cout << Calculator("/ 75 + * 4 90 2").value() << "\n";
     //return app42::echoServer(argc, argv);
 }
