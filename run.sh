@@ -1,1 +1,1 @@
-docker run -it app_42:v1
+docker run -it -p 127.0.0.1:8848:8848 app_42:v1
