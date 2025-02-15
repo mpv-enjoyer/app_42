@@ -20,6 +20,7 @@ int main()
            std::function<void(const HttpResponsePtr &)> &&callback) {
             LOG_INFO << "connected:"
                      << (request->connected() ? "true" : "false");
+            request->getAttributes();
             auto resp = HttpResponse::newHttpResponse();
             resp->setBody("Hello, World!");
             callback(resp);
@@ -41,5 +42,5 @@ int main()
 #endif
         })
         .setAfterAcceptSockOptCallback([](int) {});
-    app().addListener("127.0.0.1", 8848).run();
+    app().addListener("0.0.0.0", 8848).run();
 }
