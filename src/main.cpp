@@ -9,57 +9,18 @@ int main()
         "/",
         [](const HttpRequestPtr &req,
            std::function<void(const HttpResponsePtr &)> &&callback) {
-            //bool loggedIn =
-            //    req->session()->getOptional<bool>("loggedIn").value_or(false);
-            //HttpResponsePtr resp;
-            //if (loggedIn == false)
-            //    resp = HttpResponse::newHttpViewResponse("LoginPage");
-            //else
-            //    resp = HttpResponse::newHttpViewResponse("LogoutPage");
             HttpResponsePtr resp = HttpResponse::newHttpResponse();
             resp->setBody("root.");
             callback(resp);
         });
-
-    //app().registerHandler(
-    //    "/logout",
-    //    [](const HttpRequestPtr &req,
-    //       std::function<void(const HttpResponsePtr &)> &&callback) {
-    //        HttpResponsePtr resp = HttpResponse::newHttpResponse();
-    //        req->session()->erase("loggedIn");
-    //        resp->setBody("<script>window.location.href = \"/\";</script>");
-    //        callback(resp);
-    //    },
-    //    {Post});
-
     app().registerHandler(
         "/echo",
         [](const HttpRequestPtr &req,
            std::function<void(const HttpResponsePtr &)> &&callback) {
             HttpResponsePtr resp = HttpResponse::newHttpResponse();
-            //std::string user = req->getParameter("user");
-            //std::string passwd = req->getParameter("passwd");
             std::string contents = req->getParameter("contents");
             resp->setBody(contents + "\n");
-            //LOG_INFO << user << passwd << "\n";
-            // NOTE: Do not use MD5 for the password hash under any
-            // circumstances. We only use it because Drogon is not a
-            // cryptography library, so it does not include a better hash
-            // algorithm. Use Argon2 or BCrypt in a real product. username:
-            // user, password: password123
-            //if (user == "user" && utils::getMd5("jadsjhdsajkh" + passwd) ==
-            //                          "5B5299CF4CEAE2D523315694B82573C9")
-            //{
-            //    req->session()->insert("loggedIn", true);
-            //    resp->setBody("<script>window.location.href = \"/\";</script>");
-            //    callback(resp);
-            //}
-            //else
-            //{
-            //    resp->setStatusCode(k401Unauthorized);
-            //    resp->setBody("<script>window.location.href = \"/\";</script>");
             callback(resp);
-            //}
         },
         {Post});
 
