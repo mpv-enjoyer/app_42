@@ -1,46 +1,72 @@
-#include <trantor/utils/Logger.h>
-#ifdef _WIN32
-#include <ws2tcpip.h>
-#else
-#include <netinet/tcp.h>
-#include <sys/socket.h>
-#endif
-
 #include <drogon/drogon.h>
+#include <chrono>
 using namespace drogon;
+using namespace std::chrono_literals;
 
 int main()
 {
-    // `registerHandler()` adds a handler to the desired path. The handler is
-    // responsible for generating a HTTP response upon an HTTP request being
-    // sent to Drogon
     app().registerHandler(
         "/",
-        [](const HttpRequestPtr &request,
+        [](const HttpRequestPtr &req,
            std::function<void(const HttpResponsePtr &)> &&callback) {
-            LOG_INFO << "connected:"
-                     << (request->connected() ? "true" : "false");
-            request->getAttributes();
-            auto resp = HttpResponse::newHttpResponse();
-            resp->setBody("Hello, World!");
+            //bool loggedIn =
+            //    req->session()->getOptional<bool>("loggedIn").value_or(false);
+            //HttpResponsePtr resp;
+            //if (loggedIn == false)
+            //    resp = HttpResponse::newHttpViewResponse("LoginPage");
+            //else
+            //    resp = HttpResponse::newHttpViewResponse("LogoutPage");
+            HttpResponsePtr resp = HttpResponse::newHttpResponse();
+            resp->setBody("root.");
             callback(resp);
+        });
+
+    //app().registerHandler(
+    //    "/logout",
+    //    [](const HttpRequestPtr &req,
+    //       std::function<void(const HttpResponsePtr &)> &&callback) {
+    //        HttpResponsePtr resp = HttpResponse::newHttpResponse();
+    //        req->session()->erase("loggedIn");
+    //        resp->setBody("<script>window.location.href = \"/\";</script>");
+    //        callback(resp);
+    //    },
+    //    {Post});
+
+    app().registerHandler(
+        "/echo",
+        [](const HttpRequestPtr &req,
+           std::function<void(const HttpResponsePtr &)> &&callback) {
+            HttpResponsePtr resp = HttpResponse::newHttpResponse();
+            //std::string user = req->getParameter("user");
+            //std::string passwd = req->getParameter("passwd");
+            std::string contents = req->getParameter("contents");
+            resp->setBody(contents + "\n");
+            //LOG_INFO << user << passwd << "\n";
+            // NOTE: Do not use MD5 for the password hash under any
+            // circumstances. We only use it because Drogon is not a
+            // cryptography library, so it does not include a better hash
+            // algorithm. Use Argon2 or BCrypt in a real product. username:
+            // user, password: password123
+            //if (user == "user" && utils::getMd5("jadsjhdsajkh" + passwd) ==
+            //                          "5B5299CF4CEAE2D523315694B82573C9")
+            //{
+            //    req->session()->insert("loggedIn", true);
+            //    resp->setBody("<script>window.location.href = \"/\";</script>");
+            //    callback(resp);
+            //}
+            //else
+            //{
+            //    resp->setStatusCode(k401Unauthorized);
+            //    resp->setBody("<script>window.location.href = \"/\";</script>");
+            callback(resp);
+            //}
         },
-        {Get});
+        {Post});
+
+    LOG_INFO << "Server running on 127.0.0.1:8848";
     app()
-        .setBeforeListenSockOptCallback([](int fd) {
-            LOG_INFO << "setBeforeListenSockOptCallback:" << fd;
-#ifdef _WIN32
-#elif __linux__
-            int enable = 1;
-            if (setsockopt(
-                    fd, IPPROTO_TCP, TCP_FASTOPEN, &enable, sizeof(enable)) ==
-                -1)
-            {
-                LOG_INFO << "setsockopt TCP_FASTOPEN failed";
-            }
-#else
-#endif
-        })
-        .setAfterAcceptSockOptCallback([](int) {});
-    app().addListener("0.0.0.0", 8848).run();
+        // All sessions are stored for 24 Hours
+        .enableSession(24h)
+        .addListener("0.0.0.0", 8848)
+        .run();
 }
