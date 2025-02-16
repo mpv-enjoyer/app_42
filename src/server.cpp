@@ -7,25 +7,24 @@
 using namespace drogon;
 using namespace std::chrono_literals;
 
-int app42::echoServer(int argc, char *argv[])
+void app42::echoServer(int argc, char *argv[])
 {
     app().registerHandler(
         "/",
         [](const HttpRequestPtr &req,
            std::function<void(const HttpResponsePtr &)> &&callback) {
-            //HttpResponsePtr resp = HttpResponse::newHttpResponse();
             Json::Value json;
             if (req->getJsonObject() == nullptr)
             {
-                return callback(HttpResponse::newHttpResponse());
+                json["err"] = "No json in this request";
+                return callback(HttpResponse::newHttpJsonResponse(json));
             }
-            //auto contents = req->getOptionalParameter<std::string>("exp");
             if (req->getJsonObject()->isMember("exp"))
             {
                 auto contents = req->getJsonObject()->operator[]("exp").asString();
                 try
                 {
-                    json["res"] = std::to_string(int(Calculator(contents).value()));
+                    json["res"] = std::to_string(int(app42::Calculator(contents).value()));
                 }
                 catch(const std::exception& e)
                 {
@@ -53,5 +52,4 @@ int app42::echoServer(int argc, char *argv[])
         .enableSession(24h)
         .addListener("0.0.0.0", 8848)
         .run();
-    return 0;
 }
