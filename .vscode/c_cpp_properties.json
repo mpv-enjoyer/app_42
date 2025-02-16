@@ -3,6 +3,7 @@
         {
             "name": "Linux",
             "includePath": [
+                "${workspaceFolder}/cli/thirdparty/curlpp/include",
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/drogon/lib/inc",
                 "${workspaceFolder}/drogon/trantor"

@@ -1,3 +1,6 @@
 [submodule "thirdparty/drogon"]
 	path = thirdparty/drogon
 	url = https://github.com/drogonframework/drogon
+[submodule "cli/thirdparty/curlpp"]
+	path = cli/thirdparty/curlpp
+	url = https://github.com/jpbarrette/curlpp.git
