@@ -7,4 +7,6 @@
    - Launch the Docker daemon: `systemctl start docker`
 1) Compile: `docker build -t app_42:v1 .`
 2) Execute: `docker run -it -p 127.0.0.1:8848:8848 app_42:v1`
-3) Get server output: `curl -d contents="Sample text 42" 127.0.0.1:8848/echo`
+3) Get server output:
+   - `curl http://127.0.0.1:8848/ --header "Content-Type: application/json" -d '{"exp":"2 + 2 * 2"}'`
+   - `curl http://127.0.0.1:8848/ --header "Content-Type: application/json" -d '{"cmd":"Echo my text"}'`

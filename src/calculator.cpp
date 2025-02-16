@@ -29,6 +29,7 @@ ReversePolishCalculator::ReversePolishCalculator(std::string expression)
         }
         else
         {
+            if (values.size() < 2) throw std::invalid_argument("Numerical values mismatch");
             double right = values.top();
             values.pop();
             double left = values.top();
