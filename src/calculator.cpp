@@ -5,7 +5,7 @@
 
 #include "calculator.h"
 
-std::optional<double> ReversePolishCalculator::is_numeric(std::string const &str)
+std::optional<double> app42::ReversePolishCalculator::is_numeric(std::string const &str)
 {
     double result = 0.0;
     auto i = std::istringstream(str);
@@ -15,7 +15,7 @@ std::optional<double> ReversePolishCalculator::is_numeric(std::string const &str
     else return std::optional<double>();
 }
 
-ReversePolishCalculator::ReversePolishCalculator(std::string expression)
+app42::ReversePolishCalculator::ReversePolishCalculator(std::string expression)
 {
     auto i = std::istringstream(expression);
     std::string word;
@@ -29,6 +29,7 @@ ReversePolishCalculator::ReversePolishCalculator(std::string expression)
         }
         else
         {
+            if (values.size() < 2) throw std::invalid_argument("Numerical values mismatch");
             double right = values.top();
             values.pop();
             double left = values.top();
@@ -49,12 +50,12 @@ ReversePolishCalculator::ReversePolishCalculator(std::string expression)
     }
 }
 
-double ReversePolishCalculator::value()
+double app42::ReversePolishCalculator::value()
 {
     return m_value;
 }
 
-int Calculator::get_precedence(std::string op)
+int app42::Calculator::get_precedence(std::string op)
 {
     switch (op[0])
     {
@@ -67,7 +68,7 @@ int Calculator::get_precedence(std::string op)
     };
 }
 
-std::string Calculator::translate_to_reverse_polish(std::string expression)
+std::string app42::Calculator::translate_to_reverse_polish(std::string expression)
 {
     auto i = std::istringstream(expression);
     std::string word;
@@ -116,14 +117,14 @@ std::string Calculator::translate_to_reverse_polish(std::string expression)
     return output;
 }
 
-Calculator::Calculator(std::string expression)
+app42::Calculator::Calculator(std::string expression)
 : ReversePolishCalculator(translate_to_reverse_polish(expression)),
 m_translated_expression(translate_to_reverse_polish(expression))
 {
 
 }
 
-std::string Calculator::get_translated() const
+std::string app42::Calculator::getTranslated() const
 {
     return m_translated_expression;
 }
