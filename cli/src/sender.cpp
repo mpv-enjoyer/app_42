@@ -5,7 +5,9 @@
 #include <sstream>
 #include "sender.h"
 
-static const char* SERVER_URL = "127.0.0.1:8848";
+#ifndef APP_42_CLI_SERVER_URL // You can redefine this endpoint in compile-time
+#define APP_42_CLI_SERVER_URL "127.0.0.1:8848"
+#endif
 
 std::string app42::send(std::string key, std::string value)
 {
@@ -14,7 +16,7 @@ std::string app42::send(std::string key, std::string value)
         std::string request_field = std::string("{\"") + key + std::string("\":\"") + value + std::string("\"}");
         curlpp::Easy request;
         // Setting the URL to retrive.
-        request.setOpt(new curlpp::options::Url(SERVER_URL));
+        request.setOpt(new curlpp::options::Url(APP_42_CLI_SERVER_URL));
         request.setOpt(new curlpp::options::HttpHeader({std::string("Content-Type: application/json")}));
         request.setOpt(new curlpp::options::PostFields(request_field));
         request.setOpt(new curlpp::options::PostFieldSize(request_field.size()));
