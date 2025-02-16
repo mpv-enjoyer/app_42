@@ -34,13 +34,13 @@ void app42::echoServer(int argc, char *argv[])
             if (req->getJsonObject()->isMember("cmd"))
             {
                 auto contents = req->getJsonObject()->operator[]("cmd").asString();
-                try
+                if (contents == std::string("echo"))
                 {
-                    json["res"] = contents;
+                    json["res"] = "echo";
                 }
-                catch(const std::exception& e)
+                else
                 {
-                    json["err"] = e.what();
+                    json["err"] = "Unknown command";
                 }
             }
             callback(HttpResponse::newHttpJsonResponse(json));
